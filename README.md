@@ -39,7 +39,7 @@ sigma = 0.30  # Volatility
 
 Then run the script to calculate the option price.
 
-##How It Works
+## How It Works
 
 The script defines a function BS that calculates the Black-Scholes option price for a call or a put:
 
