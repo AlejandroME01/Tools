@@ -57,19 +57,6 @@ def BS(r, S, K, T, sigma, type='C'):
         print('Confirm all values for variables')
 ```
 
-## Example
-
-Here's an example of how to use the script to calculate the price of a call option:
-
-```sh
-print('Option Price should be: ', round(BS(r, S, K, T, sigma, type="C"), 2))
-```
-
-This will output:
-```sh
-Option Price should be:  2.35
-```
-
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request or open an issue if you have any suggestions or improvements.
