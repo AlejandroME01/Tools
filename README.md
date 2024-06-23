@@ -7,7 +7,6 @@ This repository contains a Python script for calculating the price of European c
 - [Requirements](#requirements)
 - [Usage](#usage)
 - [How It Works](#how-it-works)
-- [Example](#example)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -58,7 +57,7 @@ def BS(r, S, K, T, sigma, type='C'):
         print('Confirm all values for variables')
 ```
 
-##Example
+## Example
 
 Here's an example of how to use the script to calculate the price of a call option:
 
@@ -71,11 +70,11 @@ This will output:
 Option Price should be:  2.35
 ```
 
-##Contributing
+## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request or open an issue if you have any suggestions or improvements.
 
-##License
+## License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
