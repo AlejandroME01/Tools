@@ -7,7 +7,7 @@ import pandas as pd
 st.set_page_config(page_title="Black-Scholes Option Calculator", layout="wide")
 
 st.title("Black-Scholes Option Calculator")
-st.write("Calculate European Option Prices usinpipg the Black-Scholes Model")
+st.write("Calculate European Option Prices using the Black-Scholes Model")
 
 def BS(r, S, K, T, sigma, type='C'):
     """Calculate BS option price for a Call or a Put"""
