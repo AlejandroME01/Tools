@@ -1,65 +1,85 @@
-# Options Pricing Calculator
+# Black-Scholes Option Calculator
 
-This repository contains a Python script for calculating the price of European call and put options using the Black-Scholes formula. The implementation is based on QuantPy's video tutorial on the Black-Scholes formula in Python.
+A web-based calculator for European options using the Black-Scholes model, built with Streamlit. This application provides an intuitive interface for calculating option prices and visualizing various sensitivity analyses.
 
-## Table of Contents
+## Live Demo
+Access the calculator at: [Your Streamlit Cloud URL]
 
-- [Requirements](#requirements)
-- [Usage](#usage)
-- [How It Works](#how-it-works)
-- [Contributing](#contributing)
-- [License](#license)
+## Features
 
-## Requirements
+- Calculate European Call and Put option prices
+- Interactive parameter inputs:
+  - Stock Price (S)
+  - Strike Price (K)
+  - Time to Maturity (T)
+  - Risk-free Rate (r)
+  - Volatility (σ)
+- Visual sensitivity analysis:
+  - Stock Price sensitivity
+  - Volatility sensitivity
+  - Time sensitivity
+- Educational components explaining parameters and model assumptions
 
-To run this script, you need the following Python libraries:
+## Installation
 
+To run this application locally:
+
+1. Clone the repository:
+```bash
+git clone [your-repository-url]
+cd [repository-name]
+```
+
+2. Install the required packages:
+```bash
+pip install -r requirements.txt
+```
+
+3. Run the application:
+```bash
+streamlit run calcu_slit.py
+```
+
+## Dependencies
+
+- streamlit
 - numpy
 - scipy
+- plotly
+- pandas
 
-You can install the required libraries using pip:
+All dependencies are listed in `requirements.txt`
 
-```sh
-pip install numpy scipy
-```
+## Black-Scholes Model
+
+The Black-Scholes model is used to calculate the theoretical price of European-style options. The model assumes:
+
+1. The option is European (can only be exercised at maturity)
+2. No dividends are paid during the option's life
+3. Markets are efficient (market movements cannot be predicted)
+4. No transaction costs exist
+5. The risk-free rate and volatility of the underlying are known and constant
+6. The returns on the underlying are normally distributed
 
 ## Usage
 
-To use the options pricing calculator, edit the script to enter the values for the variables: risk-free rate (r), spot price (S), strike price (K), time to maturity (T), and volatility (sigma).
-
-```sh
-# Example values
-r = 0.01  # Risk-free rate
-S = 30    # Spot price
-K = 40    # Strike price
-T = 240/365  # Time to maturity (in years)
-sigma = 0.30  # Volatility
-```
-
-Then run the script to calculate the option price.
-
-## How It Works
-
-The script defines a function BS that calculates the Black-Scholes option price for a call or a put:
-
-```sh
-def BS(r, S, K, T, sigma, type='C'):
-    "Calculate BS option price for a Call or a Put"
-    d1 = (np.log(S/K) + (r + sigma**2/2)*T) / (sigma * np.sqrt(T))
-    d2 = d1 - sigma * np.sqrt(T)
-    try:
-        if type == "C":
-            price = S * norm.cdf(d1, 0, 1) - K * np.exp(-r * T) * norm.cdf(d2, 0, 1)
-        elif type == "P":
-            price = K * np.exp(-r * T) * norm.cdf(-d2, 0, 1) - S * norm.cdf(-d1, 0, 1)
-        return price    
-    except:
-        print('Confirm all values for variables')
-```
+1. Select the option type (Call or Put)
+2. Enter the required parameters:
+   - Current Stock Price (S)
+   - Strike Price (K)
+   - Time to Maturity (in days)
+   - Risk-free Rate (r)
+   - Volatility (σ)
+3. View the calculated option price
+4. Explore sensitivity analysis graphs to understand how different parameters affect the option price
 
 ## Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request or open an issue if you have any suggestions or improvements.
+Feel free to fork this repository and submit pull requests for any improvements. You can also open issues for any bugs found or features you'd like to suggest.
+
+## Acknowledgments
+
+- Original Black-Scholes implementation inspired by QuantPy
 
 ## License
 
