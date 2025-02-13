@@ -11,17 +11,27 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# Custom CSS for better styling
+# Custom CSS for dark theme
 st.markdown("""
     <style>
-    .main > div {
-        padding: 2rem;
+    .main {
+        background-color: #0e1117;
+        color: #ffffff;
     }
     .stTabs [data-baseweb="tab-list"] {
         gap: 2rem;
+        background-color: #0e1117;
     }
     .stTabs [data-baseweb="tab"] {
         height: 50px;
+        color: #ffffff;
+    }
+    .stNumberInput > div > div > input {
+        color: #ffffff;
+    }
+    .stSelectbox > div > div {
+        background-color: #262730;
+        color: #ffffff;
     }
     </style>
 """, unsafe_allow_html=True)
@@ -44,12 +54,33 @@ def BS(r, S, K, T, sigma, type='C'):
     except:
         return None
 
-# Create container for input parameters
+def calculate_greeks(r, S, K, T, sigma, type='C'):
+    """Calculate option Greeks"""
+    d1 = (np.log(S/K) + (r + sigma**2/2)*T)/(sigma*np.sqrt(T))
+    d2 = d1 - sigma*np.sqrt(T)
+    
+    if type == "C":
+        delta = norm.cdf(d1)
+        theta = (-S*sigma*norm.pdf(d1))/(2*np.sqrt(T)) - r*K*np.exp(-r*T)*norm.cdf(d2)
+    else:
+        delta = norm.cdf(d1) - 1
+        theta = (-S*sigma*norm.pdf(d1))/(2*np.sqrt(T)) + r*K*np.exp(-r*T)*norm.cdf(-d2)
+    
+    gamma = norm.pdf(d1)/(S*sigma*np.sqrt(T))
+    vega = S*np.sqrt(T)*norm.pdf(d1)
+    
+    return {
+        'Delta': delta,
+        'Gamma': gamma,
+        'Theta': theta/365,  # Daily theta
+        'Vega': vega/100    # Vega per 1% change in volatility
+    }
+
+# Parameters Input
 with st.container():
     st.subheader("Option Parameters")
     st.markdown("---")
     
-    # Create three columns for better parameter organization
     col1, col2, col3 = st.columns(3)
     
     with col1:
@@ -83,28 +114,46 @@ with st.container():
                                step=0.01,
                                format="%.2f")
 
-# Calculate option price
+# Calculate option price and Greeks
 option_type_short = "C" if option_type == "Call" else "P"
 price = BS(r, S, K, T, sigma, type=option_type_short)
+greeks = calculate_greeks(r, S, K, T, sigma, type=option_type_short)
 
-# Display the result in a container
-with st.container():
+# Display Results
+col1, col2 = st.columns(2)
+
+with col1:
     st.markdown("---")
     st.subheader("Option Price")
     if price is not None:
         st.markdown(f"""
-            <div style='text-align: center; padding: 1rem; background-color: #f0f2f6; border-radius: 5px;'>
-                <h3>The {option_type} Option Price is: ${price:.2f}</h3>
+            <div style='text-align: center; padding: 1rem; background-color: #262730; border-radius: 5px;'>
+                <h3 style='color: #ffffff;'>{option_type} Option Price: ${price:.2f}</h3>
             </div>
             """, unsafe_allow_html=True)
     else:
         st.error("Could not calculate option price. Please check your inputs.")
 
+with col2:
+    st.markdown("---")
+    st.subheader("Greeks")
+    st.markdown(f"""
+        <div style='padding: 1rem; background-color: #262730; border-radius: 5px;'>
+            <table style='width: 100%; color: #ffffff;'>
+                <tr>
+                    <td>Delta: {greeks['Delta']:.4f}</td>
+                    <td>Gamma: {greeks['Gamma']:.4f}</td>
+                    <td>Theta: {greeks['Theta']:.4f}</td>
+                    <td>Vega: {greeks['Vega']:.4f}</td>
+                </tr>
+            </table>
+        </div>
+        """, unsafe_allow_html=True)
+
 # Sensitivity Analysis
 st.markdown("---")
 st.subheader("Sensitivity Analysis")
 
-# Create tabs for different sensitivity analyses
 tab1, tab2, tab3 = st.tabs([
     "Stock Price Sensitivity",
     "Volatility Sensitivity",
@@ -118,7 +167,7 @@ def create_sensitivity_plot(x_values, y_values, title, x_label, y_label):
         y=y_values,
         mode='lines',
         name='Option Price',
-        line=dict(color='#1f77b4', width=2)
+        line=dict(color='#00ff00', width=2)
     ))
     fig.update_layout(
         title=title,
@@ -127,10 +176,11 @@ def create_sensitivity_plot(x_values, y_values, title, x_label, y_label):
         hovermode='x',
         height=500,
         margin=dict(t=30, b=50, l=50, r=30),
-        plot_bgcolor='white',
-        paper_bgcolor='white',
-        xaxis=dict(showgrid=True, gridcolor='#f0f0f0'),
-        yaxis=dict(showgrid=True, gridcolor='#f0f0f0')
+        plot_bgcolor='#0e1117',
+        paper_bgcolor='#0e1117',
+        font=dict(color='#ffffff'),
+        xaxis=dict(showgrid=True, gridcolor='#262730', gridwidth=1),
+        yaxis=dict(showgrid=True, gridcolor='#262730', gridwidth=1)
     )
     return fig
 
@@ -166,5 +216,4 @@ with tab3:
         'Option Price ($)'
     )
     st.plotly_chart(fig, use_container_width=True)
-
 
